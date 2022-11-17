@@ -178,6 +178,23 @@ const userCtrl = {
     }
   },
 
+  getAllUsers: async (req, res) => {
+    try {
+      const users = await User.find({})
+
+      return {
+        success: true,
+        message: 'Get all user successfully!',
+        users
+      }
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server error!" });
+    }
+  },
+
   createAdmin: async (req, res) => {
       const { email, username, password, confirmPassword } = req.body;
 

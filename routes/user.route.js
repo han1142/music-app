@@ -15,5 +15,6 @@ router.post("/google-login", userCtrl.googleLogin);
 
 // admin routes
 router.post("/create-admin", verifyToken, authAdmin, userCtrl.createAdmin);
+router.get('/users',verifyToken, authAdmin, userCtrl.getAllUsers)
 
 module.exports = router;
