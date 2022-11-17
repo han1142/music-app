@@ -7,4 +7,8 @@ router.post('/login', authCtrl.login);
 router.post('/register', authCtrl.register);
 router.post('/logout', verifyToken, authCtrl.logout);
 
+router.get('/hello', (req, res) => {
+    res.json("hello world!")
+})
+
 module.exports = router;
