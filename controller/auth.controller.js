@@ -43,7 +43,7 @@ const authCtrl = {
 
       userInfo = _.pick(userInfo, ["_id", "username", "email"]);
 
-      res.json({
+      return res.json({
         success: true,
         message: "user created successfully!",
         userInfo,
@@ -51,7 +51,7 @@ const authCtrl = {
       });
     } catch (error) {
       console.log(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Internal server error" });
     }
@@ -90,7 +90,7 @@ const authCtrl = {
         "playlists",
       ]);
 
-      res.json({
+      return res.json({
         success: true,
         message: "User logged in successfully",
         userInfo: userInfo,
@@ -98,7 +98,7 @@ const authCtrl = {
       });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ success: false, message: "Interal server error" });
+      return res.status(500).json({ success: false, message: "Interal server error" });
     }
   },
 

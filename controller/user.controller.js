@@ -14,18 +14,18 @@ const userCtrl = {
       const userId = req.params.id;
 
       if (!userId) {
-        res.status(404).json({ success: false, message: "Missing ID" });
+        return res.status(404).json({ success: false, message: "Missing ID" });
       }
 
       const user = await User.findOne({ _id: userId });
 
       if (!user)
-        res.status(400).json({ success: false, message: "Not found User" });
+        return res.status(400).json({ success: false, message: "Not found User" });
 
-      res.json({ success: true, message: "Get user success", user });
+      return res.json({ success: true, message: "Get user success", user });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ success: false, message: "Interal server error" });
+      return res.status(500).json({ success: false, message: "Interal server error" });
     }
   },
 
@@ -46,14 +46,14 @@ const userCtrl = {
 
       const userInfo = _.pick(updatedUser, ["_id", "username", "email"]);
 
-      res.json({
+      return res.json({
         success: true,
         message: "Updated successfully",
         userInfo,
       });
     } catch (error) {
       console.log(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Internal server error!" });
     }
@@ -63,16 +63,16 @@ const userCtrl = {
     const { userId } = req.body;
 
     if (!userId) {
-      res.status(404).json({ success: false, message: "Missing userId" });
+      return res.status(404).json({ success: false, message: "Missing userId" });
     }
 
     const user = await User.deleteOne({ _id: userId });
 
     if (!user) {
-      res.status(400).json({ success: false, message: "Delete user failed" });
+      return res.status(400).json({ success: false, message: "Delete user failed" });
     }
 
-    res.json({ success: true, message: "Delete user successfully" });
+    return res.json({ success: true, message: "Delete user successfully" });
   },
 
   forgotPassword: async (req, res) => {
@@ -97,7 +97,7 @@ const userCtrl = {
         "Reset your password"
       );
 
-      res.json({
+      return res.json({
         success: true,
         message: "Please check email to reset password!",
       });
@@ -213,7 +213,7 @@ const userCtrl = {
 
       userInfo = _.pick(userInfo, ["_id", "username", "email"]);
 
-      res.json({
+      return res.json({
         success: true,
         message: "admin created successfully!",
         userInfo,
