@@ -7,6 +7,7 @@ const generateTokens = require('../utils/createToken')
 const authCtrl = {
   register: async (req, res) => {
     const { email, username, password, confirmPassword } = req.body;
+    console.log(email, username, password)
 
     //simple validation
     if (!email || !password)

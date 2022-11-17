@@ -179,7 +179,45 @@ const userCtrl = {
   },
 
   createAdmin: async (req, res) => {
+      const { email, username, password, confirmPassword } = req.body;
+
+    //simple validation
+    if (!email || !password)
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing email or password" });
+
     try {
+      const user = await User.findOne({ email: email });
+
+      if (user)
+        return res
+          .status(400)
+          .json({ success: false, message: "Email already taken" });
+
+      if (password !== confirmPassword)
+        return res
+          .status(400)
+          .json({ success: false, message: "Password does not match" });
+
+      // all good
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      const newUser = new User({
+        email,
+        username,
+        password: hashedPassword,
+      });
+
+      let userInfo = await newUser.save();
+
+      userInfo = _.pick(userInfo, ["_id", "username", "email"]);
+
+      res.json({
+        success: true,
+        message: "admin created successfully!",
+        userInfo,
+      });
     } catch (error) {
       console.log(error);
       return res
