@@ -1,4 +1,6 @@
 const _ = require("lodash");
+const bcrypt = require("bcrypt");
+
 const User = require("../models/user.model");
 const generateTokens = require("../utils/createToken");
 const sendMail = require("./sendMail.controller");
@@ -20,12 +22,16 @@ const userCtrl = {
       const user = await User.findOne({ _id: userId });
 
       if (!user)
-        return res.status(400).json({ success: false, message: "Not found User" });
+        return res
+          .status(400)
+          .json({ success: false, message: "Not found User" });
 
       return res.json({ success: true, message: "Get user success", user });
     } catch (error) {
       console.log(error);
-      return res.status(500).json({ success: false, message: "Interal server error" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Interal server error" });
     }
   },
 
@@ -63,13 +69,17 @@ const userCtrl = {
     const { userId } = req.body;
 
     if (!userId) {
-      return res.status(404).json({ success: false, message: "Missing userId" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Missing userId" });
     }
 
     const user = await User.deleteOne({ _id: userId });
 
     if (!user) {
-      return res.status(400).json({ success: false, message: "Delete user failed" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Delete user failed" });
     }
 
     return res.json({ success: true, message: "Delete user successfully" });
@@ -180,13 +190,14 @@ const userCtrl = {
 
   getAllUsers: async (req, res) => {
     try {
-      const users = await User.find({})
+      console.log("get all users");
+      const users = await User.find();
 
       return {
         success: true,
-        message: 'Get all user successfully!',
-        users
-      }
+        message: "Get all user successfully!",
+        users,
+      };
     } catch (error) {
       console.log(error);
       return res
@@ -196,7 +207,7 @@ const userCtrl = {
   },
 
   createAdmin: async (req, res) => {
-      const { email, username, password, confirmPassword } = req.body;
+    const { email, username, password, confirmPassword } = req.body;
 
     //simple validation
     if (!email || !password)

@@ -1,11 +1,11 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors')
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
-require('dotenv').config()
+require("dotenv").config();
 
-const authRouter = require('./routes/auth.route')
-const userRouter = require('./routes/user.route')
+const authRouter = require("./routes/auth.route");
+const userRouter = require("./routes/user.route");
 
 const connectDB = async () => {
   try {
@@ -17,7 +17,7 @@ const connectDB = async () => {
       }
     );
 
-    console.log('MongoDB connected');
+    console.log("MongoDB connected");
   } catch (error) {
     console.log(error.message);
     process.exit(1);
@@ -26,20 +26,19 @@ const connectDB = async () => {
 
 connectDB();
 
-const corsOptions ={
-  origin:'*', 
-  credentials:true,            //access-control-allow-credentials:true
-  optionSuccessStatus:200
-}
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
 
 const app = express();
 
-app.use(express.json())
-app.use(cors(corsOptions))
+app.use(express.json());
+app.use(cors(corsOptions));
 
-app.use('/api/auth', authRouter)
-app.use('/api/user', userRouter)
-
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 
 const PORT = process.env.PORT || 5000;
 

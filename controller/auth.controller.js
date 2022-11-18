@@ -2,18 +2,24 @@ const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
-const generateTokens = require('../utils/createToken')
+const generateTokens = require("../utils/createToken");
+const validateEmail = require("../utils/verifyEmail");
 
 const authCtrl = {
   register: async (req, res) => {
     const { email, username, password, confirmPassword } = req.body;
-    console.log(email, username, password)
 
     //simple validation
     if (!email || !password)
       return res
         .status(400)
         .json({ success: false, message: "Missing email or password" });
+
+    if (!validateEmail(email)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email format error!" });
+    }
 
     try {
       const user = await User.findOne({ email: email });
@@ -37,7 +43,7 @@ const authCtrl = {
         password: hashedPassword,
       });
 
-      const { accessToken } = generateTokens(newUser)
+      const { accessToken } = generateTokens(newUser);
 
       let userInfo = await newUser.save();
 
@@ -63,6 +69,12 @@ const authCtrl = {
       return res
         .status(400)
         .json({ success: false, message: "Missing email or password" });
+
+    if (!validateEmail(email)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email format error!" });
+    }
 
     try {
       // check user existing
@@ -98,7 +110,9 @@ const authCtrl = {
       });
     } catch (error) {
       console.log(error);
-      return res.status(500).json({ success: false, message: "Interal server error" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Interal server error" });
     }
   },
 
