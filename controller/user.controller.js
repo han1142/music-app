@@ -74,7 +74,7 @@ const userCtrl = {
         .json({ success: false, message: "Missing userId" });
     }
 
-    const user = await User.deleteOne({ _id: userId });
+    const user = await User.findByIdAndDelete({ _id: userId });
 
     if (!user) {
       return res

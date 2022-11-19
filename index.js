@@ -6,6 +6,8 @@ require("dotenv").config();
 
 const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
+const soundRouter = require('./routes/sound.route')
+const emotionRouter = require('./routes/emotion.route')
 
 const connectDB = async () => {
   try {
@@ -39,6 +41,8 @@ app.use(cors(corsOptions));
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/sound", soundRouter);
+app.use('/api/emotion', emotionRouter)
 
 const PORT = process.env.PORT || 5000;
 

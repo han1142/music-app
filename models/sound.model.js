@@ -14,7 +14,7 @@ const SoundSchema = new Schema(
       trim: true,
       default: "",
     },
-    fileUrl: {
+    file: {
       type: String,
       required: true,
     },
@@ -22,16 +22,20 @@ const SoundSchema = new Schema(
       type: String,
       default: "",
     },
+    duration: {
+      type: Number,
+      required: true,
+    },
     type: {
       type: String,
       enum: ["SOUND", "MUSIC"],
       required: true,
       default: "SOUND",
     },
-    emotions: {
-      type: [mongoose.Types.ObjectId],
+    emotion: {
+      type: String,
       ref: "emotions",
-      default: [],
+      required: true
     },
   },
   {
