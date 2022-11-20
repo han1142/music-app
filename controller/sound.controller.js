@@ -18,9 +18,7 @@ const soundCtrl = {
     },
     createSound: async (req, res) => {
         try {
-            const { name, description, file, image, duration, type, emotion} = req.body
-
-            console.log(name, description, file, image, duration, type, emotion)
+            const { name, description, file, image, duration, type, emotion, artist} = req.body
 
         if(!file) {
             return res.status(400).json({success: false, message: "Please add file!"})
@@ -39,7 +37,8 @@ const soundCtrl = {
             image,
             duration,
             type,
-            emotion
+            emotion,
+            artist
         })
 
         await newSound.save()
@@ -56,7 +55,7 @@ const soundCtrl = {
     },
     updateSound: async (req, res) => {
         try {
-            const { soundId, name, description, file, image, duration, type, emotion} = req.body
+            const { soundId, name, description, file, image, duration, type, emotion, artist } = req.body
 
         if(!file) {
             return res.status(400).json({success: false, message: "Please add file!"})
@@ -75,7 +74,8 @@ const soundCtrl = {
             image,
             duration,
             type,
-            emotion
+            emotion,
+            artist
         }, {
             new: true
         })

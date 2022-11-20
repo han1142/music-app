@@ -22,6 +22,10 @@ const SoundSchema = new Schema(
       type: String,
       default: "",
     },
+    artist: {
+      type: String,
+      default: "No artist"
+    },
     duration: {
       type: Number,
       required: true,
