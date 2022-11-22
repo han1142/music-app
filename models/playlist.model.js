@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const PaylistSchema = new Schema(
+const PlaylistSchema = new Schema(
   {
     name: {
       type: String,
@@ -31,4 +31,4 @@ const PaylistSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("playlists", PaylistSchema);
+module.exports = mongoose.model("playlists", PlaylistSchema);
