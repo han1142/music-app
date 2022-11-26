@@ -4,11 +4,13 @@ const Emotion = require('../models/emotion.model')
 const soundCtrl = {
     getSounds: async (req, res) => {
         try {
-        const {name, perPage = 10, page = 0} = req.query
+        const {name, perPage = 5, page = 0} = req.body
 
-        const query = name ? { name } : {}
+        const query = name ? { name: { "$regex": name, "$options": "i" }, type: "SOUND" } : { type: "SOUND" }
 
         const sounds = await Sound.find(query).limit(perPage).skip(page * perPage)
+
+        console.log(sounds.length)
 
         return res.json({success: true, message: "Get sounds successfully!", sounds})
         } catch (error) {
@@ -16,6 +18,22 @@ const soundCtrl = {
             return res.status(500).json({success: false, message: "Internal server error!"})
         }
     },
+
+    getMusics: async (req, res) => {
+        try {
+            const {name, perPage = 10, page = 0} = req.body
+    
+            const query = name ? { name: { "$regex": name, "$options": "i" }, type: "MUSIC" } : { type: "MUSIC" }
+    
+            const musics = await Sound.find(query).limit(perPage).skip(page * perPage)
+    
+            return res.json({success: true, message: "Get musics successfully!", musics})
+            } catch (error) {
+                console.log(error)
+                return res.status(500).json({success: false, message: "Internal server error!"})
+            }
+    },
+
     createSound: async (req, res) => {
         try {
             const { name, description, file, image, duration, type, emotion, artist} = req.body

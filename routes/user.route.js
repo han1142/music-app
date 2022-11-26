@@ -14,7 +14,7 @@ router.post("/reset-password", verifyToken, userCtrl.resetPassword);
 router.post("/google-login", userCtrl.googleLogin);
 
 // admin routes
-router.get("/admin/users", verifyToken, authAdmin, userCtrl.getAllUsers);
+router.get("/admin/users", userCtrl.getAllUsers);
 router.post(
   "/admin/create-admin",
   verifyToken,

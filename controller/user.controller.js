@@ -98,7 +98,7 @@ const userCtrl = {
       }
 
       const { accessToken } = generateTokens(user);
-      const url = `${process.env.CLIENT_URL}/user/reset/${accessToken}`;
+      const url = `${process.env.CLIENT_URL}/reset?token=${accessToken}`;
 
       const data = await sendMail(
         email,
@@ -193,11 +193,11 @@ const userCtrl = {
       console.log("get all users");
       const users = await User.find();
 
-      return {
+      return res.json({
         success: true,
         message: "Get all user successfully!",
         users,
-      };
+      });
     } catch (error) {
       console.log(error);
       return res
