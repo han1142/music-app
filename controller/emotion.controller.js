@@ -4,7 +4,11 @@ const Emotion = require('../models/emotion.model')
 const emotionCtrl = {
     getEmotions: async (req, res) => {
         try {
-            const emotions = await Emotion.find();
+            const {name, perPage = 10, page = 0} = req.body
+
+            const query = name ? { name: { "$regex": name, "$options": "i" } } : {}
+
+            const emotions = await Emotion.find(query).limit(perPage).skip(page * perPage)
 
             return res.json({
                 success: true, 

@@ -9,6 +9,7 @@ const userRouter = require("./routes/user.route");
 const soundRouter = require("./routes/sound.route");
 const emotionRouter = require("./routes/emotion.route");
 const playlistRouter = require("./routes/playlist.route");
+const questionRouter = require('./routes/question.route')
 
 const connectDB = async () => {
   try {
@@ -45,6 +46,7 @@ app.use("/api/user", userRouter);
 app.use("/api/sound", soundRouter);
 app.use("/api/emotion", emotionRouter);
 app.use("/api/playlist", playlistRouter);
+app.use('/api/question', questionRouter)
 
 const PORT = process.env.PORT || 5000;
 

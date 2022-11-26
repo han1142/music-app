@@ -6,7 +6,7 @@ const emotionCtrl = require('../controller/emotion.controller')
 const verifyToken = require('../middleware/auth.middleware')
 const authAdmin = require('../middleware/authAdmin.middleware')
 
-router.get('/', emotionCtrl.getEmotions);
+router.post('/', emotionCtrl.getEmotions);
 router.post('/create', emotionCtrl.createEmotion)
 router.post('/update', emotionCtrl.updateEmotion)
 router.post('/delete', emotionCtrl.deleteEmotion)

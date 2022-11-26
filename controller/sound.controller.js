@@ -4,13 +4,11 @@ const Emotion = require('../models/emotion.model')
 const soundCtrl = {
     getSounds: async (req, res) => {
         try {
-        const {name, perPage = 5, page = 0} = req.body
+        const {name, perPage = 10, page = 0} = req.body
 
         const query = name ? { name: { "$regex": name, "$options": "i" }, type: "SOUND" } : { type: "SOUND" }
 
         const sounds = await Sound.find(query).limit(perPage).skip(page * perPage)
-
-        console.log(sounds.length)
 
         return res.json({success: true, message: "Get sounds successfully!", sounds})
         } catch (error) {

@@ -2,6 +2,7 @@ const _ = require("lodash");
 const bcrypt = require("bcrypt");
 
 const User = require("../models/user.model");
+const Sound = require('../models/sound.model')
 const generateTokens = require("../utils/createToken");
 const sendMail = require("./sendMail.controller");
 
@@ -37,20 +38,29 @@ const userCtrl = {
 
   updateUser: async (req, res) => {
     try {
-      const { username } = req.body;
-      if (!username) return res.status(400).json({ msg: "Missing username" });
+      const { username, email, fullName, userId } = req.body;
+
+      const existingUser = await User.findOne({ _id: userId })
+
+      if(!existingUser) {
+        return res.status(404).json({success: false, message: "Not found user!"})
+      }
+
+      if (!username || !email || !fullName) return res.status(400).json({ msg: "Missing params" });
 
       const updatedUser = await User.findOneAndUpdate(
-        { _id: req.userId },
+        { _id: userId },
         {
           username,
+          email,
+          fullName
         },
         {
           new: true,
         }
       );
 
-      const userInfo = _.pick(updatedUser, ["_id", "username", "email"]);
+      const userInfo = _.pick(updatedUser, ["_id", "username", "email", "fullName"]);
 
       return res.json({
         success: true,
@@ -74,7 +84,7 @@ const userCtrl = {
         .json({ success: false, message: "Missing userId" });
     }
 
-    const user = await User.findByIdAndDelete({ _id: userId });
+    const user = await User.findOneAndDelete({ _id: userId });
 
     if (!user) {
       return res
@@ -190,14 +200,120 @@ const userCtrl = {
 
   getAllUsers: async (req, res) => {
     try {
-      console.log("get all users");
-      const users = await User.find();
+      const {username, perPage = 10, page = 0} = req.body
+
+      const query = username ? { username: { "$regex": username, "$options": "i" }, role: 0 } : { role: 0 }
+
+      const users = await User.find(query).limit(perPage).skip(page * perPage);
 
       return res.json({
         success: true,
         message: "Get all user successfully!",
         users,
       });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server error!" });
+    }
+  },
+
+  addToFavorite: async (req, res) => {
+    try {
+      const { soundId } = req.body
+      const userId = req.userId
+
+      if(!soundId) {
+        return res.status(400).json({ success: false, message: "Sound ID is empty!"})
+      }
+
+      const sound = await Sound.findOne({ _id: soundId })
+
+      if(!sound) {
+        return res.status(404).json({success: false, message: "Not found sound with Id"})
+      }
+
+      const existingUser = await User.findOne({ _id: userId })
+      if(!existingUser) {
+        return res.status(404).json({ success: false, message: "Not found user!"})
+      }
+
+      const updateUser = await User.findOneAndUpdate({ _id: userId},{
+        $push: { favorites: sound._id },
+      },
+      { new: true })
+
+      if(!updateUser) {
+        return res.status(404).json({success: false, message: "Not found user"})
+      }
+
+      return res.json({success: true, message: "Add to favorite successfully!", userInfo: updateUser})
+
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server error!" });
+    }
+  },
+
+  removeFromFavorite: async (req, res) => {
+    try {
+      const { soundId } = req.body
+      const userId = req.userId
+
+      if(!soundId) {
+        return res.status(400).json({ success: false, message: "Sound ID is empty!"})
+      }
+
+      const sound = await Sound.findOne({ _id: soundId })
+
+      if(!sound) {
+        return res.status(404).json({success: false, message: "Not found sound with Id"})
+      }
+
+      const existingUser = await User.findOne({ _id: userId })
+      if(!existingUser) {
+        return res.status(404).json({ success: false, message: "Not found user!"})
+      }
+
+      const updateUser = await User.findOneAndUpdate({ _id: userId},{
+        $pull: { favorites: sound._id },
+      },
+      { new: true })
+
+      if(!updateUser) {
+        return res.status(404).json({success: false, message: "Not found user"})
+      }
+
+      return res.json({success: true, message: "Remove from favorite successfully!", userInfo: updateUser})
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server error!" });
+    }
+  },
+
+  getListFavorite: async (req, res) => {
+    try {
+      const { name, perPage = 10, page = 0 } = req.body
+      const userId = req.userId
+
+      const query = name ? { name: { "$regex": name, "$options": "i" }, role: 0 } : { role: 0 }
+
+      const existingUser = await User.findOne({ _id: userId })
+      if(!existingUser) {
+        return res.status(404).json({ success: false, message: 'Not found user!' })
+      }
+
+      const listFavorite = existingUser.favorites
+
+      const soundsInFavorite = await Sound.find({ _id: { $in: listFavorite } }).limit(perPage).skip(perPage * page)
+
+      return res.json({ success: true, message: "Get list favorite successfully!", favorites: soundsInFavorite })
+
     } catch (error) {
       console.log(error);
       return res
