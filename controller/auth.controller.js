@@ -46,8 +46,6 @@ const authCtrl = {
 
       let userInfo = await newUser.save();
 
-      userInfo = _.pick(userInfo, ["_id", "username", "email"]);
-
       return res.json({
         success: true,
         message: "user created successfully!",
@@ -93,18 +91,10 @@ const authCtrl = {
 
       const { accessToken } = generateTokens(user);
 
-      const userInfo = _.pick(user, [
-        "_id",
-        "username",
-        "email",
-        "favorites",
-        "playlists",
-      ]);
-
       return res.json({
         success: true,
         message: "User logged in successfully",
-        userInfo: userInfo,
+        userInfo: user,
         accessToken,
       });
     } catch (error) {

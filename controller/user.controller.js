@@ -194,7 +194,7 @@ const userCtrl = {
 
       await newUser.save();
 
-      return res.json({ success: true, message: "Login google successfully!" });
+      return res.json({ success: true, message: "Login google successfully!", userInfo: newUser });
     }
   },
 
