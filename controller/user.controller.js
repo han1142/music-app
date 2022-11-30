@@ -239,7 +239,7 @@ const userCtrl = {
         return res.status(404).json({ success: false, message: "Not found user!"})
       }
 
-      const updateUser = await User.findOneAndUpdate({ _id: userId},{
+      const updateUser = await User.findOneAndUpdate({ _id: userId}, {
         $push: { favorites: sound._id },
       },
       { new: true })
