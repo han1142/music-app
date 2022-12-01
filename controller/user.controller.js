@@ -49,9 +49,6 @@ const userCtrl = {
           .json({ success: false, message: 'Not found user!' });
       }
 
-      if (!username || !email || !fullName)
-        return res.status(400).json({ msg: 'Missing params' });
-
       const updatedUser = await User.findOneAndUpdate(
         { _id: req.userId },
         {
