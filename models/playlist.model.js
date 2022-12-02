@@ -9,6 +9,12 @@ const PlaylistSchema = new Schema(
       required: true,
     },
 
+    image: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+
     description: {
       type: String,
       default: "",

@@ -22,7 +22,7 @@ const emotionCtrl = {
     },
     createEmotion: async (req, res) => {
         try {
-            const {name, icon} = req.body
+            const { name, icon } = req.body
 
             const newEmotion = new Emotion({
                 name, icon: icon

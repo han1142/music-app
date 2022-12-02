@@ -5,7 +5,7 @@ const Sound = require('../models/sound.model');
 const playlistCtrl = {
   createPlaylist: async (req, res) => {
     try {
-      const { name, description, songs = [] } = req.body;
+      const { name, description, songs = [], image } = req.body;
 
       const existingUser = await User.find({ _id: req.userId });
 
@@ -37,6 +37,7 @@ const playlistCtrl = {
         description,
         userId: req.userId,
         songs,
+        image
       });
 
       await newPlaylist.save();
@@ -212,7 +213,7 @@ const playlistCtrl = {
 
   updatePlaylist: async (req, res) => {
     try {
-      const { playlistId, name, description } = req.body;
+      const { playlistId, name, description, image } = req.body;
 
       const existingUser = await User.find({ _id: req.userId });
       if (!existingUser) {
@@ -235,8 +236,26 @@ const playlistCtrl = {
       });
 
       if (existingPlaylistName) {
-        return res.status(400).json({ success: false, message: '' });
+        return res.status(400).json({ success: false, message: 'Playlist name existed' });
       }
+
+      const updatePlaylist = await Playlist.findOneAndUpdate(
+        {
+          _id: playlistId,
+        },
+        {
+          name, description, image
+        },
+        {
+          new: true
+        }
+      )
+
+      if(!updatePlaylist) {
+        return res.status(400).json({ success: false, message: 'Update playlist failed!' })
+      }
+
+      return res.json({ success: true, message: 'Update playlist successfully', playlistInfo: updatePlaylist })
     } catch (error) {
       console.log(error);
       return res
