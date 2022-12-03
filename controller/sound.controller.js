@@ -27,15 +27,15 @@ const soundCtrl = {
 
   getMusics: async (req, res) => {
     try {
-      const { name, emotionId } = req.body;
+      const { name, emotionIds = [] } = req.body;
 
       const query = name
         ? {
             name: { $regex: name, $options: 'i' },
             type: 'MUSIC',
-            emotion: emotionId,
+            emotion: { $in: emotionIds },
           }
-        : { type: 'MUSIC', emotion: emotionId };
+        : { type: 'MUSIC', emotion: { $in: emotionIds }};
 
       const musics = await Sound.find(query);
 
