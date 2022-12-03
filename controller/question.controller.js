@@ -1,4 +1,5 @@
 const Question = require('../models/question.model')
+const _ = require('lodash')
 
 const QuestionCtrl = {
     getQuestions: async (req, res) => {
@@ -20,16 +21,34 @@ const QuestionCtrl = {
         }
     },
 
+    getRandomQuestion: async (req, res) => {
+        try {
+            const questions = await Question.find().populate('emotions');
+            if(!questions || questions.length === 0 ) {
+                return res.status(400).json({ success: false, message: "Question list is empty!" })
+            }
+
+            const randomQuestion = questions[_.random(0, questions.length - 1)]
+
+            return res.json({ success: true, message: "Get question successfully!", question: randomQuestion })
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ success: false, message: "Internal server error!"})
+        }
+    },
+
     createQuestion: async (req, res) => {
         try {
-            const { content } = req.body
+            const { content, emotionIds = [] } = req.body
 
             if(!content) {
                 return rea.status(400).json({success: false, message: "Content is empty!"})
             }
 
             const newQuestion = new Question({
-                content
+                content,
+                emotions: emotionIds
             })
             await newQuestion.save()
 

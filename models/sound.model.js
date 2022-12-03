@@ -37,7 +37,7 @@ const SoundSchema = new Schema(
       default: "SOUND",
     },
     emotion: {
-      type: String,
+      type: mongoose.Types.ObjectId,
       ref: "emotions",
       required: true
     },
