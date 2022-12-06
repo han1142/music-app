@@ -19,7 +19,7 @@ router.post('/get-favorite', verifyToken, userCtrl.getListFavorite)
 router.post("/google-login", userCtrl.googleLogin);
 
 // admin routes
-router.post("/admin/users", verifyToken, authAdmin, userCtrl.getAllUsers);
+router.post("/admin/users", userCtrl.getAllUsers);
 router.post(
   "/admin/create-admin",
   verifyToken,

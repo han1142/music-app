@@ -25,6 +25,29 @@ const soundCtrl = {
     }
   },
 
+  getMusicAdmin: async (req, res) => {
+    try {
+      const { name } = req.body;
+
+      const query = name
+        ? { name: { $regex: name, $options: 'i' }, type: 'MUSIC' }
+        : { type: 'MUSIC' };
+
+      const musics = await Sound.find(query);
+
+      return res.json({
+        success: true,
+        message: 'Get musics successfully!',
+        musics,
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: 'Internal server error!' });
+    }
+  },
+
   getMusics: async (req, res) => {
     try {
       const { name, emotionIds = [] } = req.body;
@@ -33,9 +56,9 @@ const soundCtrl = {
         ? {
             name: { $regex: name, $options: 'i' },
             type: 'MUSIC',
-            emotion: { $in: emotionIds },
+            // $or: [ { emotion: { $in: emotionIds }}],
           }
-        : { type: 'MUSIC', emotion: { $in: emotionIds }};
+        : { emotion: { $in: emotionIds }, type: 'MUSIC'};
 
       const musics = await Sound.find(query);
 
