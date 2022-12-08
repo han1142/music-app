@@ -5,8 +5,8 @@ const verifyToken = require('../middleware/auth.middleware');
 
 router.post('/', questionCtrl.getQuestions);
 router.post('/random-question', verifyToken, questionCtrl.getRandomQuestion);
-router.post('/create', verifyToken, questionCtrl.createQuestion);
-router.post('/update', verifyToken, questionCtrl.updateQuestion);
-router.post('/delete', verifyToken, questionCtrl.deleteQuestion);
+router.post('/create', questionCtrl.createQuestion);
+router.post('/update', questionCtrl.updateQuestion);
+router.post('/delete', questionCtrl.deleteQuestion);
 
 module.exports = router;
