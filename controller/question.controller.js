@@ -63,19 +63,25 @@ const QuestionCtrl = {
         try {
             const { content, emotionIds = [], questionId } = req.body
 
+            console.log(emotionIds)
+
             if(!content || !questionId) {
                 return rea.status(400).json({success: false, message: "Content is empty!"})
             }
 
             const existingQuestion = await Question.findOne({ _id: questionId })
+            console.log(existingQuestion)
 
             if(!existingQuestion) {
                 return res.status(404).json({ success: false, message: 'Not found question' })
             }
 
             const updateQuestion = await Question.findOneAndUpdate({ _id: questionId }, {
-                content,
-                emotionIds
+                $set:
+                {
+                    content,
+                    emotions: emotionIds
+                }
             }, {
                 new: true
             })
@@ -83,6 +89,8 @@ const QuestionCtrl = {
             if(!updateQuestion) {
                 return res.status(400).json({ success: false, message: "Error update question!"})
             }
+
+            console.log('updateQuestion', updateQuestion)
 
             return res.json({ success: true, message: "Update question successfully!", questionInfo: updateQuestion })
         } catch (error) {
