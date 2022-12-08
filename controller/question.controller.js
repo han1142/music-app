@@ -61,7 +61,7 @@ const QuestionCtrl = {
 
     updateQuestion: async (req, res) => {
         try {
-            const { content, questionId } = req.body
+            const { content, emotionIds = [], questionId } = req.body
 
             if(!content || !questionId) {
                 return rea.status(400).json({success: false, message: "Content is empty!"})
@@ -74,7 +74,8 @@ const QuestionCtrl = {
             }
 
             const updateQuestion = await Question.findOneAndUpdate({ _id: questionId }, {
-                content
+                content,
+                emotionIds
             }, {
                 new: true
             })
