@@ -271,6 +271,12 @@ const userCtrl = {
         { new: true }
       );
 
+      const updateSound = await Sound.findOneAndUpdate(
+        { _id: soundId },
+        { likeCount: sound.likeCount + 1 },
+        { new: true }
+      );
+
       if (!updateUser) {
         return res
           .status(404)
@@ -281,6 +287,7 @@ const userCtrl = {
         success: true,
         message: 'Add to favorite successfully!',
         userInfo: updateUser,
+        sound: updateSound,
       });
     } catch (error) {
       console.log(error);
@@ -330,10 +337,17 @@ const userCtrl = {
           .json({ success: false, message: 'Not found user' });
       }
 
+      const updateSound = await Sound.findOneAndUpdate(
+        { _id: soundId },
+        { likeCount: sound.likeCount - 1 },
+        { new: true }
+      );
+
       return res.json({
         success: true,
         message: 'Remove from favorite successfully!',
         userInfo: updateUser,
+        sound: updateSound
       });
     } catch (error) {
       console.log(error);

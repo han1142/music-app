@@ -50,7 +50,45 @@ const soundCtrl = {
 
   getMusics: async (req, res) => {
     try {
-      const { name, emotionIds = [] } = req.body;
+      const { name, emotionIds } = req.body;
+
+      let query = {}
+
+      if(!emotionIds) {
+        query = name
+        ? {
+            name: { $regex: name, $options: 'i' },
+            type: 'MUSIC',
+          }
+        : { type: 'MUSIC'};
+      } else {
+        query = name
+          ? {
+              name: { $regex: name, $options: 'i' },
+              type: 'MUSIC',
+              $or: [ { emotion: { $in: emotionIds }}],
+            }
+          : { emotion: { $in: emotionIds }, type: 'MUSIC'};
+      }
+
+      const musics = await Sound.find(query);
+
+      return res.json({
+        success: true,
+        message: 'Get musics successfully!',
+        musics,
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: 'Internal server error!' });
+    }
+  },
+
+  getAllMusicsForRank : async (req, res) => {
+    try {
+      const { name } = req.body;
 
       const query = name
         ? {
@@ -58,9 +96,9 @@ const soundCtrl = {
             type: 'MUSIC',
             // $or: [ { emotion: { $in: emotionIds }}],
           }
-        : { emotion: { $in: emotionIds }, type: 'MUSIC'};
+        : { type: 'MUSIC' };
 
-      const musics = await Sound.find(query);
+      const musics = await Sound.find(query).sort( { "likeCount": -1 } );
 
       return res.json({
         success: true,

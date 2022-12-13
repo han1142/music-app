@@ -30,6 +30,10 @@ const SoundSchema = new Schema(
       type: Number,
       required: true,
     },
+    likeCount: {
+      type: Number,
+      default: 0
+    },
     type: {
       type: String,
       enum: ["SOUND", "MUSIC"],
