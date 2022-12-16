@@ -159,6 +159,12 @@ const userCtrl = {
   googleLogin: async (req, res) => {
     const { tokenId } = req.body;
 
+    if (!tokenId) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Missing tokenID' });
+    }
+
     const verify = await client.verifyIdToken({
       idToken: tokenId,
       audience: process.env.CLIENT_ID_FOR_LOGIN,
@@ -347,7 +353,7 @@ const userCtrl = {
         success: true,
         message: 'Remove from favorite successfully!',
         userInfo: updateUser,
-        sound: updateSound
+        sound: updateSound,
       });
     } catch (error) {
       console.log(error);

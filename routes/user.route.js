@@ -6,7 +6,7 @@ const authAdmin = require("../middleware/authAdmin.middleware");
 
 router.get("/:id", verifyToken, userCtrl.getUserInfo);
 router.post("/update", verifyToken, userCtrl.updateUser);
-router.post("/delete", verifyToken, userCtrl.deleteUser);
+router.post("/delete", userCtrl.deleteUser);
 router.post("/change-password", verifyToken, userCtrl.changePassword);
 router.post("/forgot-password", userCtrl.forgotPassword);
 router.post("/reset-password", verifyToken, userCtrl.resetPassword);

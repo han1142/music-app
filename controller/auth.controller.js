@@ -105,6 +105,57 @@ const authCtrl = {
     }
   },
 
+  loginAdmin: async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password)
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing email or password" });
+
+    if (!validateEmail(email)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email format error!" });
+    }
+
+    try {
+      // check user existing
+      const user = await User.findOne({ email });
+
+      if (!user)
+        return res
+          .status(400)
+          .json({ success: false, message: "Incorrect email" });
+
+      if(user.role !== 1) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Role failed" });
+      }
+
+      const passwordValid = await bcrypt.compare(password, user.password);
+
+      if (!passwordValid)
+        return res
+          .status(400)
+          .json({ success: false, message: "Incorrect  password" });
+
+      const { accessToken } = generateTokens(user);
+
+      return res.json({
+        success: true,
+        message: "User logged in successfully",
+        userInfo: user,
+        accessToken,
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Interal server error" });
+    }
+  },
+
   logout: async (req, res) => {
     if (req.userId) {
       return res.status(200).json("Logged out!");
