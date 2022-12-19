@@ -187,12 +187,14 @@ const soundCtrl = {
           .json({ success: false, message: 'Please add file!' });
       }
 
-      const existingEmotion = await Emotion.findOne({ _id: emotion });
+      if(type === 'MUSIC') {
+        const existingEmotion = await Emotion.findOne({ _id: emotion });
 
-      if (!existingEmotion) {
-        return res
-          .status(404)
-          .json({ success: false, message: 'Emotion not found!' });
+        if (!existingEmotion) {
+          return res
+            .status(404)
+            .json({ success: false, message: 'Emotion not found!' });
+        }
       }
 
       const updateSound = await Sound.findOneAndUpdate(
