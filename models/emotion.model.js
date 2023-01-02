@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const EmotionSchema = new Schema(
@@ -10,7 +10,11 @@ const EmotionSchema = new Schema(
 
     icon: {
       type: String,
-      default: "",
+      default: '',
+    },
+    level: {
+      type: Number,
+      required: true,
     },
   },
   {
@@ -18,4 +22,4 @@ const EmotionSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("emotions", EmotionSchema);
+module.exports = mongoose.model('emotions', EmotionSchema);
