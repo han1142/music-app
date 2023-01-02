@@ -4,6 +4,7 @@ const questionCtrl = require('../controller/question.controller');
 const verifyToken = require('../middleware/auth.middleware');
 
 router.post('/', questionCtrl.getQuestions);
+router.post('/emotion', questionCtrl.getEmotion);
 router.post('/random-question', questionCtrl.getRandomQuestion);
 router.post('/question-level-1', questionCtrl.getQuestionLevel1);
 router.post('/question-level-2', questionCtrl.getQuestionLevel2);

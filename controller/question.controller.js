@@ -12,12 +12,39 @@ const QuestionCtrl = {
 
       const questions = await Question.find(query)
         .limit(perPage)
-        .skip(page * perPage);
+        .skip(page * perPage)
+        .populate('emotions');
 
       return res.json({
         success: true,
         message: 'Get all questions successfully!',
         questions,
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: 'Internal server error!' });
+    }
+  },
+
+  getEmotion: async (req, res) => {
+    try {
+      const { id } = req.body;
+
+      const question = await Question.findOne({ _id: id }).populate('emotions');
+
+      if (!question) {
+        return res.status.json({
+          success: false,
+          message: 'Not found question',
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: 'Get question emotions successfully!',
+        question,
       });
     } catch (error) {
       console.log(error);
