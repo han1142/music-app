@@ -52,31 +52,38 @@ const soundCtrl = {
     try {
       const { name, emotionIds } = req.body;
 
-      let query = {}
+      let query = {};
 
-      if(!emotionIds) {
+      if (!emotionIds) {
         query = name
-        ? {
-            name: { $regex: name, $options: 'i' },
-            type: 'MUSIC',
-          }
-        : { type: 'MUSIC'};
+          ? {
+              name: { $regex: name, $options: 'i' },
+              type: 'MUSIC',
+            }
+          : { type: 'MUSIC' };
       } else {
         query = name
           ? {
               name: { $regex: name, $options: 'i' },
               type: 'MUSIC',
-              $or: [ { emotion: { $in: emotionIds }}],
+              $or: [{ emotion: { $in: emotionIds } }],
             }
-          : { emotion: { $in: emotionIds }, type: 'MUSIC'};
+          : { emotion: { $in: emotionIds }, type: 'MUSIC' };
       }
 
-      const musics = await Sound.find(query);
+      const musics = await Sound.find(query).populate('emotion');
+
+      const emotionId = musics[0].emotion._id;
+
+      const musicsOfEmotion = await Sound.find({
+        emotion: emotionId,
+        type: 'MUSIC',
+      });
 
       return res.json({
         success: true,
         message: 'Get musics successfully!',
-        musics,
+        musics: [...musics, ...musicsOfEmotion],
       });
     } catch (error) {
       console.log(error);
@@ -86,7 +93,7 @@ const soundCtrl = {
     }
   },
 
-  getAllMusicsForRank : async (req, res) => {
+  getAllMusicsForRank: async (req, res) => {
     try {
       const { name } = req.body;
 
@@ -98,7 +105,7 @@ const soundCtrl = {
           }
         : { type: 'MUSIC' };
 
-      const musics = await Sound.find(query).sort( { "likeCount": -1 } );
+      const musics = await Sound.find(query).sort({ likeCount: -1 });
 
       return res.json({
         success: true,
@@ -132,7 +139,7 @@ const soundCtrl = {
           .json({ success: false, message: 'Please add file!' });
       }
 
-      if(type === 'MUSIC') {
+      if (type === 'MUSIC') {
         const existingEmotion = await Emotion.findOne({ _id: emotion });
 
         if (!existingEmotion) {
@@ -187,7 +194,7 @@ const soundCtrl = {
           .json({ success: false, message: 'Please add file!' });
       }
 
-      if(type === 'MUSIC') {
+      if (type === 'MUSIC') {
         const existingEmotion = await Emotion.findOne({ _id: emotion });
 
         if (!existingEmotion) {
