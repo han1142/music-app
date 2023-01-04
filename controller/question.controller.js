@@ -4,16 +4,13 @@ const _ = require('lodash');
 const QuestionCtrl = {
   getQuestions: async (req, res) => {
     try {
-      const { content, perPage = 10, page = 0 } = req.body;
+      const { content } = req.body;
 
       const query = content
         ? { content: { $regex: content, $options: 'i' } }
         : {};
 
-      const questions = await Question.find(query)
-        .limit(perPage)
-        .skip(page * perPage)
-        .populate('emotions');
+      const questions = await Question.find(query).populate('emotions');
 
       return res.json({
         success: true,

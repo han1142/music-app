@@ -220,15 +220,13 @@ const userCtrl = {
 
   getAllUsers: async (req, res) => {
     try {
-      const { username, perPage = 10, page = 0 } = req.body;
+      const { username } = req.body;
 
       const query = username
         ? { username: { $regex: username, $options: 'i' }, role: 0 }
         : { role: 0 };
 
-      const users = await User.find(query)
-        .limit(perPage)
-        .skip(page * perPage);
+      const users = await User.find(query);
 
       return res.json({
         success: true,
@@ -365,7 +363,7 @@ const userCtrl = {
 
   getListFavorite: async (req, res) => {
     try {
-      const { name, perPage = 10, page = 0 } = req.body;
+      const { name } = req.body;
       const userId = req.userId;
 
       const query = name
@@ -381,9 +379,7 @@ const userCtrl = {
 
       const listFavorite = existingUser.favorites;
 
-      const soundsInFavorite = await Sound.find({ _id: { $in: listFavorite } })
-        .limit(perPage)
-        .skip(perPage * page);
+      const soundsInFavorite = await Sound.find({ _id: { $in: listFavorite } });
 
       return res.json({
         success: true,
