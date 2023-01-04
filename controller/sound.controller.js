@@ -1,5 +1,6 @@
 const Sound = require('../models/sound.model');
 const Emotion = require('../models/emotion.model');
+const _ = require('lodash');
 
 const soundCtrl = {
   getSounds: async (req, res) => {
@@ -80,10 +81,14 @@ const soundCtrl = {
         type: 'MUSIC',
       });
 
+      const result = musicsOfEmotion.concat(musics).filter(function (o) {
+        return this[o._id] ? false : (this[o._id] = true);
+      }, {});
+
       return res.json({
         success: true,
         message: 'Get musics successfully!',
-        musics: [...musics, ...musicsOfEmotion],
+        musics: result,
       });
     } catch (error) {
       console.log(error);
